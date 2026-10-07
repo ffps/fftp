@@ -13,5 +13,6 @@
     <string name="stop">Остановить</string>
     <string name="bad_port">Порт должен быть от 1024 до 65535</string>
     <string name="start_failed">Не удалось запустить FTP-сервер: %1$s</string>
-    <string name="hint">Корневая папка — память устройства. Подключайтесь любым FTP-клиентом по локальной сети. Порты ниже 1024 требуют root и не допускаются.</string>
+    <string name="hint">Корневая папка — память устройства. Подключайтесь любым FTP-клиентом по локальной сети.</string>
+    <string name="version">Версия %1$s</string>
 </resources>

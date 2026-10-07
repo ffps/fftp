@@ -46,6 +46,12 @@ public class MainActivity extends Activity {
         etPass = (EditText) findViewById(R.id.et_pass);
         tvStatus = (TextView) findViewById(R.id.tv_status);
 
+        try {
+            String v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            ((TextView) findViewById(R.id.tv_version)).setText(getString(R.string.version, v));
+        } catch (PackageManager.NameNotFoundException ignored) {
+        }
+
         etPort.setText(String.valueOf(Prefs.port(this)));
         etUser.setText(Prefs.user(this));
         etPass.setText(Prefs.pass(this));
