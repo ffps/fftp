@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">fFTP</string>
+    <string name="enable">FTP server enabled</string>
+    <string name="port">Port (1024–65535)</string>
+    <string name="user">User name</string>
+    <string name="pass">Password (empty = no login required)</string>
+    <string name="autostart">Start automatically on boot</string>
+    <string name="save">Save / apply</string>
+    <string name="status_running">Running:\n%1$s</string>
+    <string name="status_stopped">Stopped</string>
+    <string name="status_error">Failed to start: %1$s</string>
+    <string name="notif_title">fFTP server is running</string>
+    <string name="stop">Stop</string>
+    <string name="bad_port">Port must be between 1024 and 65535</string>
+    <string name="start_failed">FTP server failed to start: %1$s</string>
+    <string name="hint">The root folder is the device storage. Connect with any FTP client over the local network. Ports below 1024 need root and are not allowed.</string>
+</resources>

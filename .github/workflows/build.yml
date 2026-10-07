@@ -1,0 +1,67 @@
+name: Build APK
+
+on:
+  push:
+    tags: ['v*']          # git tag v1.0.0 && git push origin v1.0.0
+  workflow_dispatch:      # manual run (APK is only attached as an artifact)
+
+permissions:
+  contents: write         # needed to create a Release
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.5'
+
+      - name: Prepare signing key
+        env:
+          KS_B64: ${{ secrets.KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASS: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          KS="$RUNNER_TEMP/fftp.jks"
+          if [ -n "$KS_B64" ]; then
+            echo "$KS_B64" | base64 -d > "$KS"
+            PASS="$KS_PASS"; ALIAS="${KEY_ALIAS:-fftp}"; KPASS="${KEY_PASS:-$KS_PASS}"
+          else
+            echo "::warning::No KEYSTORE_BASE64 secret: generating a throw-away key. Updates over an APK built with another key will not install; add the secrets (see README)."
+            PASS="fftp-ci"; ALIAS="fftp"; KPASS="fftp-ci"
+            keytool -genkeypair -keystore "$KS" -storepass "$PASS" -keypass "$KPASS" \
+              -alias "$ALIAS" -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=fFTP"
+          fi
+          {
+            echo "FFTP_KS=$KS"
+            echo "FFTP_KS_PASS=$PASS"
+            echo "FFTP_KEY_ALIAS=$ALIAS"
+            echo "FFTP_KEY_PASS=$KPASS"
+          } >> "$GITHUB_ENV"
+
+      - name: Build
+        run: |
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then VERSION="${GITHUB_REF_NAME#v}"; else VERSION="0.0-dev"; fi
+          gradle --no-daemon assembleRelease -PversionName="$VERSION" -PversionCode="$GITHUB_RUN_NUMBER"
+          mkdir -p dist
+          cp app/build/outputs/apk/release/app-release.apk "dist/fFTP-$VERSION.apk"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fFTP-apk
+          path: dist/*.apk
+
+      - name: Publish Release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.apk
+          generate_release_notes: true

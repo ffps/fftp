@@ -1,0 +1,52 @@
+plugins {
+    id 'com.android.application'
+}
+
+// Signing: CI passes the keystore through env vars (see .github/workflows/build.yml).
+// Without them, a local `gradle assembleRelease` falls back to the debug key.
+def ksPath = System.getenv("FFTP_KS")
+
+android {
+    namespace 'io.github.ffps.fftp'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'io.github.ffps.fftp'
+        minSdk 17        // Android 4.2
+        // 28 keeps the old "legacy" storage model and does not force scoped storage,
+        // and is still accepted for installation on current Android versions.
+        targetSdk 28
+        versionCode (project.findProperty('versionCode') ?: '1').toInteger()
+        versionName project.findProperty('versionName') ?: '1.0'
+    }
+
+    signingConfigs {
+        release {
+            if (ksPath) {
+                storeFile file(ksPath)
+                storePassword System.getenv("FFTP_KS_PASS")
+                keyAlias System.getenv("FFTP_KEY_ALIAS")
+                keyPassword System.getenv("FFTP_KEY_PASS")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig ksPath ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}
