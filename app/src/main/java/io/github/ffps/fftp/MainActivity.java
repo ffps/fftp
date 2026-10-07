@@ -68,6 +68,12 @@ public class MainActivity extends Activity {
                 apply();
             }
         });
+
+        // Opened by something other than the user (e.g. a kiosk autostart list):
+        // make sure the server is up if it is enabled.
+        if (state == null && Prefs.enabled(this) && !FtpService.active) {
+            FtpService.start(this);
+        }
     }
 
     @Override

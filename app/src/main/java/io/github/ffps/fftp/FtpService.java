@@ -34,6 +34,8 @@ public class FtpService extends Service {
     static volatile boolean running;
     /** Last start error (null if none). */
     static volatile String error;
+    /** True from the moment the service accepted a start until it is destroyed. */
+    static volatile boolean active;
 
     private final Handler main = new Handler(Looper.getMainLooper());
     private FtpServer server;
@@ -87,6 +89,7 @@ public class FtpService extends Service {
             stopSelf();
             return START_NOT_STICKY;
         }
+        active = true;
 
         stopServer();
         error = null;
@@ -121,6 +124,7 @@ public class FtpService extends Service {
     public void onDestroy() {
         stopServer();
         running = false;
+        active = false;
         releaseLocks();
         stopForeground(true);
         super.onDestroy();
