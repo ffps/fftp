@@ -42,12 +42,13 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle state) {
         super.onCreate(state);
 
-        // Server enabled: just make sure it runs and do not show the settings.
-        // Settings open from the notification. If the last start failed (e.g. the port is
-        // busy) the settings are shown anyway, otherwise there would be no way to fix it.
+        // Server enabled but not running yet: start it silently, without the settings screen.
+        // If it is already running (the user tapped the icon) or was opened from the
+        // notification, show the settings. After a failed start (e.g. the port is busy) the
+        // settings are shown too, otherwise there would be no way to fix it.
         if (state == null && !getIntent().getBooleanExtra(EXTRA_SETTINGS, false)
-                && Prefs.enabled(this) && FtpService.error == null) {
-            if (!FtpService.active) FtpService.start(this);
+                && Prefs.enabled(this) && !FtpService.active && FtpService.error == null) {
+            FtpService.start(this);
             finish();
             overridePendingTransition(0, 0);
             return;
