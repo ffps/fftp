@@ -16,8 +16,8 @@ android {
         // 28 keeps the old "legacy" storage model and does not force scoped storage,
         // and is still accepted for installation on current Android versions.
         targetSdk 28
-        versionCode (project.findProperty('versionCode') ?: '1').toInteger()
-        versionName project.findProperty('versionName') ?: '1.0'
+        versionCode = Integer.parseInt((project.findProperty('versionCode') ?: '1').toString())
+        versionName = (project.findProperty('versionName') ?: '1.0').toString()
     }
 
     signingConfigs {
