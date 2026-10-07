@@ -1,3 +1,5 @@
+<p align="center"><img src="https://raw.githubusercontent.com/ffps/fftp/refs/heads/main/icons/variant-1.svg" /></p>
+
 # fFTP
 
 Простой FTP-сервер для Android: передать/скачать конфиги и небольшие файлы по домашней сети.
