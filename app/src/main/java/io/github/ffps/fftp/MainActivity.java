@@ -19,6 +19,9 @@ import android.widget.Toast;
 import java.util.List;
 
 public class MainActivity extends Activity {
+    /** Set by the notification: show the settings even if the server is enabled. */
+    static final String EXTRA_SETTINGS = "settings";
+
     private CheckBox cbEnable;
     private CheckBox cbAuto;
     private EditText etPort;
@@ -38,6 +41,18 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle state) {
         super.onCreate(state);
+
+        // Server enabled: just make sure it runs and do not show the settings.
+        // Settings open from the notification. If the last start failed (e.g. the port is
+        // busy) the settings are shown anyway, otherwise there would be no way to fix it.
+        if (state == null && !getIntent().getBooleanExtra(EXTRA_SETTINGS, false)
+                && Prefs.enabled(this) && FtpService.error == null) {
+            if (!FtpService.active) FtpService.start(this);
+            finish();
+            overridePendingTransition(0, 0);
+            return;
+        }
+
         setContentView(R.layout.activity_main);
         cbEnable = (CheckBox) findViewById(R.id.cb_enable);
         cbAuto = (CheckBox) findViewById(R.id.cb_autostart);
@@ -68,12 +83,6 @@ public class MainActivity extends Activity {
                 apply();
             }
         });
-
-        // Opened by something other than the user (e.g. a kiosk autostart list):
-        // make sure the server is up if it is enabled.
-        if (state == null && Prefs.enabled(this) && !FtpService.active) {
-            FtpService.start(this);
-        }
     }
 
     @Override

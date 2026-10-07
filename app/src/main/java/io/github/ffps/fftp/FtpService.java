@@ -170,7 +170,8 @@ public class FtpService extends Service {
     }
 
     private Notification buildNotification(String text) {
-        PendingIntent open = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), piFlags());
+        PendingIntent open = PendingIntent.getActivity(this, 0,
+                new Intent(this, MainActivity.class).putExtra(MainActivity.EXTRA_SETTINGS, true), piFlags());
         PendingIntent stop = PendingIntent.getService(this, 1,
                 new Intent(this, FtpService.class).setAction(ACTION_STOP), piFlags());
 
