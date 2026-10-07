@@ -26,7 +26,6 @@ import java.util.List;
 
 /** Foreground service that owns the FTP server and shows the status-bar notification. */
 public class FtpService extends Service {
-    static final String ACTION_STOP = "io.github.ffps.fftp.STOP";
     private static final String CHANNEL = "fftp";
     private static final int NOTIFICATION_ID = 1;
 
@@ -73,12 +72,6 @@ public class FtpService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null && ACTION_STOP.equals(intent.getAction())) {
-            Prefs.setEnabled(this, false);
-            stopSelf();
-            return START_NOT_STICKY;
-        }
-
         int port = Prefs.port(this);
         List<String> ips = addresses();
         String text = ips.isEmpty() ? "port " + port : "ftp://" + ips.get(0) + ":" + port;
@@ -172,8 +165,9 @@ public class FtpService extends Service {
     private Notification buildNotification(String text) {
         PendingIntent open = PendingIntent.getActivity(this, 0,
                 new Intent(this, MainActivity.class).putExtra(MainActivity.EXTRA_SETTINGS, true), piFlags());
-        PendingIntent stop = PendingIntent.getService(this, 1,
-                new Intent(this, FtpService.class).setAction(ACTION_STOP), piFlags());
+        // A broadcast, not a service start: stopping must work even when the app has no
+        // visible UI and background service starts are restricted (Android 8+).
+        PendingIntent stop = PendingIntent.getBroadcast(this, 1, new Intent(this, StopReceiver.class), piFlags());
 
         Notification.Builder b;
         if (Build.VERSION.SDK_INT >= 26) {
