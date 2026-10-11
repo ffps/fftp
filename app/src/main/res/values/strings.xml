@@ -7,13 +7,13 @@
     <string name="autostart">Start automatically on boot</string>
     <string name="start_service">START SERVICE</string>
     <string name="stop_service">STOP SERVICE</string>
-    <string name="status_running">Running:\n%1$s</string>
+    <string name="status_running">Running: %1$s</string>
     <string name="status_stopped">Stopped</string>
     <string name="status_error">Failed to start: %1$s</string>
     <string name="notif_title">fFTP server is running</string>
     <string name="stop">Stop</string>
     <string name="bad_port">Port must be between 1024 and 65535</string>
     <string name="start_failed">FTP server failed to start: %1$s</string>
-    <string name="hint">The root folder is the device storage. Connect with any FTP client over the local network.</string>
+    <string name="hint">The root folder is the device storage.</string>
     <string name="version">Version %1$s</string>
 </resources>

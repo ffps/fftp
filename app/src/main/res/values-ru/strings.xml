@@ -6,13 +6,13 @@
     <string name="autostart">Запускать при загрузке системы</string>
     <string name="start_service">ЗАПУСТИТЬ СЕРВИС</string>
     <string name="stop_service">ОСТАНОВИТЬ СЕРВИС</string>
-    <string name="status_running">Работает:\n%1$s</string>
+    <string name="status_running">Работает: %1$s</string>
     <string name="status_stopped">Остановлен</string>
     <string name="status_error">Не удалось запустить: %1$s</string>
     <string name="notif_title">Сервер fFTP работает</string>
     <string name="stop">Остановить</string>
     <string name="bad_port">Порт должен быть от 1024 до 65535</string>
     <string name="start_failed">Не удалось запустить FTP-сервер: %1$s</string>
-    <string name="hint">Корневая папка — память устройства. Подключайтесь любым FTP-клиентом по локальной сети.</string>
+    <string name="hint">Корневая папка — память устройства.</string>
     <string name="version">Версия %1$s</string>
 </resources>
