@@ -5,6 +5,7 @@
     <string name="pass">Пароль (пусто = вход без авторизации)</string>
     <string name="autostart">Запускать при загрузке системы</string>
     <string name="start_service">ЗАПУСТИТЬ СЕРВИС</string>
+    <string name="stop_service">ОСТАНОВИТЬ СЕРВИС</string>
     <string name="status_running">Работает:\n%1$s</string>
     <string name="status_stopped">Остановлен</string>
     <string name="status_error">Не удалось запустить: %1$s</string>

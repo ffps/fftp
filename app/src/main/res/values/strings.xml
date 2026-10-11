@@ -6,6 +6,7 @@
     <string name="pass">Password (empty = no login required)</string>
     <string name="autostart">Start automatically on boot</string>
     <string name="start_service">START SERVICE</string>
+    <string name="stop_service">STOP SERVICE</string>
     <string name="status_running">Running:\n%1$s</string>
     <string name="status_stopped">Stopped</string>
     <string name="status_error">Failed to start: %1$s</string>

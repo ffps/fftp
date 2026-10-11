@@ -69,11 +69,12 @@
 
         <ToggleButton
             android:id="@+id/btn_toggle"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:minWidth="180dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textOff="@string/start_service"
-            android:textOn="@string/start_service" />
+            android:textOn="@string/stop_service" />
 
         <TextView
             android:layout_width="match_parent"
