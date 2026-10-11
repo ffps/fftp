@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="enable">FTP-сервер включён</string>
     <string name="port">Порт (1024–65535)</string>
     <string name="user">Имя пользователя</string>
     <string name="pass">Пароль (пусто = вход без авторизации)</string>
     <string name="autostart">Запускать при загрузке системы</string>
-    <string name="save">Сохранить / применить</string>
+    <string name="start_service">ЗАПУСТИТЬ СЕРВИС</string>
     <string name="status_running">Работает:\n%1$s</string>
     <string name="status_stopped">Остановлен</string>
     <string name="status_error">Не удалось запустить: %1$s</string>

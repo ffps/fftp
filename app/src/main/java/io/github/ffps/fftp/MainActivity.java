@@ -9,12 +9,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class MainActivity extends Activity {
     /** Set by the notification: show the settings even if the server is enabled. */
     static final String EXTRA_SETTINGS = "settings";
 
-    private CheckBox cbEnable;
+    private ToggleButton toggle;
     private CheckBox cbAuto;
     private EditText etPort;
     private EditText etUser;
@@ -55,7 +55,7 @@ public class MainActivity extends Activity {
         }
 
         setContentView(R.layout.activity_main);
-        cbEnable = (CheckBox) findViewById(R.id.cb_enable);
+        toggle = (ToggleButton) findViewById(R.id.btn_toggle);
         cbAuto = (CheckBox) findViewById(R.id.cb_autostart);
         etPort = (EditText) findViewById(R.id.et_port);
         etUser = (EditText) findViewById(R.id.et_user);
@@ -72,16 +72,13 @@ public class MainActivity extends Activity {
         etUser.setText(Prefs.user(this));
         etPass.setText(Prefs.pass(this));
         cbAuto.setChecked(Prefs.autostart(this));
-        cbEnable.setChecked(Prefs.enabled(this));
+        setUiOn(Prefs.enabled(this));
 
-        cbEnable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton b, boolean checked) {
-                if (!suppress) apply();
-            }
-        });
-        findViewById(R.id.btn_save).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                apply();
+                if (suppress) return;
+                if (checked) turnOn();
+                else turnOff();
             }
         });
     }
@@ -89,7 +86,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        handler.post(ticker);
+        if (toggle != null) handler.post(ticker);
     }
 
     @Override
@@ -98,13 +95,18 @@ public class MainActivity extends Activity {
         super.onPause();
     }
 
-    private void setEnableChecked(boolean v) {
+    /** Syncs the button state and locks/unlocks the settings (locked while the service is on). */
+    private void setUiOn(boolean on) {
         suppress = true;
-        cbEnable.setChecked(v);
+        toggle.setChecked(on);
         suppress = false;
+        etPort.setEnabled(!on);
+        etUser.setEnabled(!on);
+        etPass.setEnabled(!on);
+        cbAuto.setEnabled(!on);
     }
 
-    private void apply() {
+    private void turnOn() {
         int port;
         try {
             port = Integer.parseInt(etPort.getText().toString().trim());
@@ -114,18 +116,21 @@ public class MainActivity extends Activity {
         if (port < 1024 || port > 65535) {
             Toast.makeText(this, R.string.bad_port, Toast.LENGTH_LONG).show();
             etPort.requestFocus();
-            if (cbEnable.isChecked()) setEnableChecked(false);
+            setUiOn(false);
             return;
         }
-        boolean on = cbEnable.isChecked();
-        Prefs.save(this, on, port, etUser.getText().toString().trim(), etPass.getText().toString(),
+        Prefs.save(this, true, port, etUser.getText().toString().trim(), etPass.getText().toString(),
                 cbAuto.isChecked());
-        if (on) {
-            requestStorageAccess();
-            FtpService.start(this);
-        } else {
-            stopService(new Intent(this, FtpService.class));
-        }
+        setUiOn(true);
+        requestStorageAccess();
+        FtpService.start(this);
+        refreshStatus();
+    }
+
+    private void turnOff() {
+        Prefs.setEnabled(this, false);
+        stopService(new Intent(this, FtpService.class));
+        setUiOn(false);
         refreshStatus();
     }
 
@@ -151,7 +156,7 @@ public class MainActivity extends Activity {
 
     private void refreshStatus() {
         // The service can switch itself off (Stop button in the notification).
-        if (Prefs.enabled(this) != cbEnable.isChecked()) setEnableChecked(Prefs.enabled(this));
+        if (Prefs.enabled(this) != toggle.isChecked()) setUiOn(Prefs.enabled(this));
 
         String text;
         if (FtpService.running) {
