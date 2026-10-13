@@ -72,6 +72,11 @@ public class MainActivity extends Activity {
         etUser.setText(Prefs.user(this));
         etPass.setText(Prefs.pass(this));
         cbAuto.setChecked(Prefs.autostart(this));
+        cbAuto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean checked) {
+                Prefs.setAutostart(MainActivity.this, checked);
+            }
+        });
         setUiOn(Prefs.enabled(this));
 
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

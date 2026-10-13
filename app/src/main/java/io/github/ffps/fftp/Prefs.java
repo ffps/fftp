@@ -26,6 +26,10 @@ final class Prefs {
         return sp(c).getBoolean("autostart", false);
     }
 
+    static void setAutostart(Context c, boolean v) {
+        sp(c).edit().putBoolean("autostart", v).commit();
+    }
+
     static int port(Context c) {
         return sp(c).getInt("port", DEFAULT_PORT);
     }
