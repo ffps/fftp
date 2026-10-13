@@ -4,8 +4,12 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <path android:pathData="M32,44 L74,44" android:strokeColor="#FFFFFF" android:strokeWidth="7" android:strokeLineCap="round" android:strokeLineJoin="round"/>
-    <path android:pathData="M64,34 L74,44 L64,54" android:strokeColor="#FFFFFF" android:strokeWidth="7" android:strokeLineCap="round" android:strokeLineJoin="round"/>
-    <path android:pathData="M76,64 L34,64" android:strokeColor="#80DEEA" android:strokeWidth="7" android:strokeLineCap="round" android:strokeLineJoin="round"/>
-    <path android:pathData="M44,54 L34,64 L44,74" android:strokeColor="#80DEEA" android:strokeWidth="7" android:strokeLineCap="round" android:strokeLineJoin="round"/>
+    <group
+        android:scaleX="0.72"
+        android:scaleY="0.72"
+        android:translateX="10.8"
+        android:translateY="10.1">
+        <path android:pathData="M34,50 L86,50 M74,38 L86,50 L74,62" android:strokeColor="#FFFFFF" android:strokeWidth="7" android:strokeLineCap="round" android:strokeLineJoin="round"/>
+        <path android:pathData="M86,72 L34,72 M46,60 L34,72 L46,84" android:strokeColor="#80DEEA" android:strokeWidth="7" android:strokeLineCap="round" android:strokeLineJoin="round"/>
+    </group>
 </vector>
